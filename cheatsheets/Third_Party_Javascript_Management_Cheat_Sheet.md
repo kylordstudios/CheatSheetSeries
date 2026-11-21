@@ -215,6 +215,14 @@ Both of these tools be used by sites to sandbox/clean DOM data.
 
 It is important to know that in order for SRI to work, the vendor host needs [CORS](https://www.w3.org/TR/cors/) enabled. Also it is good idea to monitor vendor JavaScript for changes in regular way. Because sometimes you can get **secure** but **not working** third-party code when the vendor decides to update it.
 
+#### Approving Changes to Frequently Updated Vendor Scripts
+
+Vendor updates break SRI hashes, so teams often drop them for frequently updated scripts such as tag managers. Instead:
+
+- Self-host the script, review each vendor update, and pin a new hash only for approved versions.
+- Use `Integrity-Policy-Report-Only` to find scripts loaded without integrity metadata before enforcing `Integrity-Policy`.
+- **Experimental:** [Signature-based SRI](https://wicg.github.io/signature-based-sri/) is a WICG proposal with limited browser support. It verifies updates against a pinned public key instead of a hash. Use a key your organization controls, because a vendor-held key won't protect you if the vendor is compromised. Don't rely on it alone: browsers without support ignore key-only metadata and load the script unchecked, and old signed releases can be replayed until their signatures expire, so keep expiry periods short.
+
 ### Keeping JavaScript libraries updated
 
 [OWASP Top 10:2025 A03 Software Supply Chain Failures](https://owasp.org/Top10/2025/A03_2025-Software_Supply_Chain_Failures/) describes the problem of using components with known vulnerabilities. This includes JavaScript libraries. JavaScript libraries must be kept up to date, as previous versions can have known vulnerabilities which can lead to the site typically being vulnerable to [Cross Site Scripting](https://owasp.org/www-community/attacks/xss/). There are several tools out there that can help identify such libraries. One such tool is the free open source tool [RetireJS](https://retirejs.github.io)
